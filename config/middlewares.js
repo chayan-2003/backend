@@ -1,18 +1,14 @@
 module.exports = [
+  // Other middlewares...
   {
-    name: "strapi::cors",
+    name: 'strapi::cors',
     config: {
       enabled: true,
-      origin: ["*"], // Allow all origins
+      origin: ['*'], // Allows all origins; replace '*' with specific domains in production for security
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
+      keepHeaderOnError: true,
     },
   },
-  "strapi::errors",
-  "strapi::security",
-  "strapi::poweredBy",
-  "strapi::logger",
-  "strapi::query",
-  "strapi::body",
-  "strapi::session",
-  "strapi::favicon",
-  "strapi::public",
+  // Other middlewares...
 ];
