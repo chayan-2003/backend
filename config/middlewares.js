@@ -1,5 +1,5 @@
 module.exports = [
-  // Other middlewares...
+
   {
     name: 'strapi::cors',
     config: {
@@ -10,5 +10,5 @@ module.exports = [
       keepHeaderOnError: true,
     },
   },
-  // Other middlewares...
+
 ];
