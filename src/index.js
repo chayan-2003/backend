@@ -62,7 +62,7 @@ module.exports = {
             Text: recievedText,
             session: sessionId,
           };
-          //creating a message for strapi
+     
           await strapi.services.message.create(message);
       });
 
