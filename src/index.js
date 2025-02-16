@@ -44,7 +44,7 @@ module.exports = {
         return;
       }
 
-      // Additional log to confirm the connection is kept open
+
       console.log("Socket.IO connection successfully authenticated");
 
       socket.on("joinRoom", (room) => {
@@ -62,7 +62,7 @@ module.exports = {
 
           await strapi.db.query("api::message.message").create({
             data: {
-              sender: sender.id,
+              sender: JSON.parse(sender).id,
               text: recievedText,
               session: parseInt(sessionId, 10),
             },
