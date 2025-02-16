@@ -56,6 +56,14 @@ module.exports = {
         const { recievedText, sender,sessionId } = textmessage;
         console.log(recievedText,sender,sessionId);
         io.to(sessionId).emit("newMessage", { recievedText, sender ,sessionId});
+          //save the message to the database
+          const message = {
+            sender: sender.id,
+            Text: recievedText,
+            session: sessionId,
+          };
+          //creating a message for strapi
+          await strapi.services.message.create(message);
       });
 
       socket.on("disconnect", () => {
