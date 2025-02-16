@@ -51,29 +51,45 @@ module.exports = {
         console.log("Joining room:", room);
         socket.join(room);
       });
-
       socket.on("sendMessage", async (textmessage) => {
         const { recievedText, sender, sessionId } = textmessage;
-        console.log(recievedText, sender, sessionId);
-
-        io.to(sessionId).emit("newMessage", { recievedText, sender, sessionId });
-
+        console.log("Received message:", recievedText, sender, sessionId);
+      
+        // Ensure sender is a valid object and has a valid id
+        let senderId;
         try {
-
+          senderId = JSON.parse(sender).id;
+        } catch (err) {
+          console.error("Invalid sender data:", err);
+          return;
+        }
+      
+        // Ensure sessionId is valid
+        let parsedSessionId = parseInt(sessionId, 10);
+        if (isNaN(parsedSessionId)) {
+          console.error("Invalid sessionId:", sessionId);
+          return;
+        }
+      
+        // Emit the message to the room
+        io.to(sessionId).emit("newMessage", { recievedText, sender, sessionId });
+      
+        try {
+          // Save the message to Strapi
           await strapi.db.query("api::message.message").create({
             data: {
-              sender: JSON.parse(sender).id,
+              sender: senderId,
               text: recievedText,
-              session: parseInt(sessionId, 10),
+              session: parsedSessionId,
             },
           });
-
-
+      
           console.log("Message saved successfully in Strapi v5");
         } catch (error) {
           console.error("Error saving message to Strapi:", error);
         }
       });
+      
 
 
       socket.on("disconnect", () => {
