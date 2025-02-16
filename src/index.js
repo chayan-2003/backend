@@ -52,19 +52,28 @@ module.exports = {
         socket.join(room);
       });
   
-      socket.on("sendMessage", async(textmessage) => {
-        const { recievedText, sender,sessionId } = textmessage;
-        console.log(recievedText,sender,sessionId);
-        io.to(sessionId).emit("newMessage", { recievedText, sender ,sessionId});
-          //save the message to the database
-          const message = {
-            sender: sender.id,
-            Text: recievedText,
-            session: sessionId,
-          };
-          //creating a message for strapi
-          await strapi.services.message.create(message);
+      socket.on("sendMessage", async (textmessage) => {
+        const { recievedText, sender, sessionId } = textmessage;
+        console.log(recievedText, sender, sessionId);
+      
+        io.to(sessionId).emit("newMessage", { recievedText, sender, sessionId });
+      
+        try {
+        
+          await strapi.db.query("api::message.message").create({
+            data: {
+              sender: sender.id,
+              Text: recievedText, 
+              session: sessionId,
+            },
+          });
+      
+          console.log("Message saved successfully in Strapi v5");
+        } catch (error) {
+          console.error("Error saving message to Strapi:", error);
+        }
       });
+      
 
       socket.on("disconnect", () => {
         console.log(`User ${decoded.id} disconnected`);
