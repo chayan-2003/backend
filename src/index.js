@@ -51,14 +51,11 @@ module.exports = {
         console.log("Joining room:", room);
         socket.join(room);
       });
-      socket.on("receiveMessage", (message) => {
-        console.log("Message received:", message);
-      });
-      socket.on("sendMessage", (textmessage) => {
-        const { message, sender,sessionId } = textmessage;
-        console.log(message,sender,sessionId);
-        console.log(`Sending message to room ${sessionId}: ${message} by ${JSON.parse(sender).username}` );
-        io.to(sessionId).emit("newMessage", {  sender, text:message });
+  
+      socket.on("sendMessage", async(textmessage) => {
+        const { recievedText, sender,sessionId } = textmessage;
+        console.log(recievedText,sender,sessionId);
+        io.to(sessionId).emit("newMessage", { recievedText, sender ,sessionId});
       });
 
       socket.on("disconnect", () => {
