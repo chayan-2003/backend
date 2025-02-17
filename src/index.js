@@ -61,7 +61,7 @@ module.exports = {
             data:
             {
               Text: recievedText,
-              sender: JSON.parse(sender),
+              sender: JSON.parse(sender.id),
               session: sessionId,
             },
           };
