@@ -56,16 +56,7 @@ module.exports = {
         const { recievedText, sender,sessionId } = textmessage;
         console.log(recievedText,sender,sessionId);
         io.to(sessionId).emit("newMessage", { recievedText, sender ,sessionId});
-       
-          const message = {
-            data:
-            {
-              Text: recievedText,
-              sender: JSON.parse(sender).id,
-              session: sessionId,
-            },
-          };
-          await axios.post(`${API_URL}/api/messages`, message);
+      
       });
 
       socket.on("disconnect", () => {
